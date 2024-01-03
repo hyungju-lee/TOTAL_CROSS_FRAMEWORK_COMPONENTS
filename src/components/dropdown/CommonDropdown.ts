@@ -9,6 +9,21 @@ const template = `
   </div>
 `;
 
+/**
+ * 1. MutationObserver
+ * 2. 이벤트 위임
+ * 3. slotchange
+ *
+ * - scoped slot - vue X
+ *
+ * 갖다 쓰는 쪽에서
+ * - const a = useReact(CommonDropdown)
+ * useVue2
+ * useVue3
+ * useSvelte
+ *
+ * customElements.define('x-a', a)
+ * */
 class CommonDropdown extends HTMLElement {
   isOpen!: boolean;
   // observer!: MutationObserver;
