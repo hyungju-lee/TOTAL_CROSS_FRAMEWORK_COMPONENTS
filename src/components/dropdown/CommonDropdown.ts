@@ -92,7 +92,7 @@ class CommonDropdown extends HTMLElement {
     // this.observer.disconnect();
   }
 
-  attributeChangedCallbackattributeChangedCallback(name: string, _oldValue: string, newValue: string) {
+  attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
     switch (name) {
       case 'style':
         this.applyStyles(newValue);

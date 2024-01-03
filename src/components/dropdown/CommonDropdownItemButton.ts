@@ -18,17 +18,6 @@ class CommonDropdownItemButton extends HTMLElement {
         this.data = data;
     }
 
-    get style() {
-        return super.style;
-    }
-
-    set style(value) {
-        const baseEl = this.shadowRoot!.querySelector<HTMLElement>('.common-dropdown-item-button');
-        if (baseEl) {
-            Object.assign(baseEl.style, value);
-        }
-    }
-
     constructor() {
         super();
         this.attachShadow({mode: 'open'});
