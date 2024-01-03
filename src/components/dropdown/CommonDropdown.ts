@@ -26,14 +26,14 @@ const template = `
  * customElements.define('x-a', a)
  * */
 class CommonDropdown extends HTMLElement implements CustomWebComponent {
-  value: {label: string; value: unknown} | undefined = undefined;
+  modelValue: {label: string; value: unknown} | undefined = undefined;
   isOpen!: boolean;
   // observer!: MutationObserver;
   dropdownList: HTMLElement | null = null;
   dropdownButton: HTMLElement | null = null;
 
   static observedAttributes = [
-    'value',
+    'modelValue',
     'style',
   ];
 
@@ -99,7 +99,7 @@ class CommonDropdown extends HTMLElement implements CustomWebComponent {
       this.addEventListener('click:common-dropdown-item-button', event => {
         if (isCustomEvent(event)) {
           console.log('list item button clicked', event.detail)
-          this.dispatchEvent(new CustomEvent('click:value', {
+          this.dispatchEvent(new CustomEvent('update:modelValue', {
             bubbles: true, // 이벤트 버블링 허용
             detail: {
               data: event.detail.data,
@@ -124,11 +124,11 @@ class CommonDropdown extends HTMLElement implements CustomWebComponent {
         }
         this.applyStyles(newValue);
         break
-      case 'value':
+      case 'modelValue':
         if (!isDropdownValueObject(newValue)) {
           return
         }
-        this.value = newValue;
+        this.modelValue = newValue;
         break;
       default:
         break;
