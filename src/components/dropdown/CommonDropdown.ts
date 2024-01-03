@@ -1,6 +1,7 @@
-import {isCustomEvent} from "../types/guards.ts";
+import {isCustomEvent, isDropdownValueObject} from "../types/guards.ts";
 import CommonDropdownButton from "./CommonDropdownButton.ts";
 import CommonDropdownList from "./CommonDropdownList.ts";
+import {CustomWebComponent} from "../types/interfaces.ts";
 
 const template = `
   <div class="common-dropdown">
@@ -24,13 +25,15 @@ const template = `
  *
  * customElements.define('x-a', a)
  * */
-class CommonDropdown extends HTMLElement {
+class CommonDropdown extends HTMLElement implements CustomWebComponent {
+  value: {label: string; value: unknown} | undefined = undefined;
   isOpen!: boolean;
   // observer!: MutationObserver;
   dropdownList: HTMLElement | null = null;
   dropdownButton: HTMLElement | null = null;
 
   static observedAttributes = [
+    'value',
     'style',
   ];
 
@@ -113,11 +116,20 @@ class CommonDropdown extends HTMLElement {
     // this.observer.disconnect();
   }
 
-  attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
+  attributeChangedCallback(name: string, _oldValue: unknown, newValue: unknown) {
     switch (name) {
       case 'style':
+        if (typeof newValue !== 'string') {
+          return;
+        }
         this.applyStyles(newValue);
         break
+      case 'value':
+        if (!isDropdownValueObject(newValue)) {
+          return
+        }
+        this.value = newValue;
+        break;
       default:
         break;
     }
