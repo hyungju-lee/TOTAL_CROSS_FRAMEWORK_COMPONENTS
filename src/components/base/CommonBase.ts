@@ -1,14 +1,10 @@
-const template = `
-  <span style="font-size: 30px">하이 오 연결되네?</span>
-  <ul class="common-base">
-    <li>왜안돼</li>
-    <li>
-      <slot></slot>
-    </li>
-  </ul>
+class CommonBase extends HTMLElement {
+  private template: string = `
+  <div class="common-base">
+    <slot></slot>
+  </div>
 `;
 
-class CommonBase extends HTMLElement {
   get style() {
     return (this.shadowRoot!.host as HTMLElement).style;
   }
@@ -28,7 +24,7 @@ class CommonBase extends HTMLElement {
   }
 
   render() {
-    this.shadowRoot!.innerHTML = template;
+    this.shadowRoot!.innerHTML = this.template;
   }
 }
 

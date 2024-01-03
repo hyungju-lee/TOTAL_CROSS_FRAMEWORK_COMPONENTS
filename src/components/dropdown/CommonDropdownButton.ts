@@ -1,15 +1,23 @@
-const template = `
-<button type="button">
-  <slot></slot>
-</button>
-`;
-
 class CommonDropdownButton extends HTMLElement {
+  private template: string = `
+  <button type="button" class="common-dropdown-button">
+    <slot></slot>
+  </button>
+  `;
+
   static observedAttributes = [
     'disabled',
   ];
 
   resolve: (value: unknown) => void = () => {};
+
+  get style() {
+    return (this.shadowRoot!.host as HTMLElement).style;
+  }
+
+  set style(value) {
+    Object.assign((this.shadowRoot!.host as HTMLElement), value);
+  }
 
   constructor() {
     super();
@@ -18,11 +26,13 @@ class CommonDropdownButton extends HTMLElement {
 
   connectedCallback() {
     this.setAttribute('slot', 'dropdownButton');
-    this.render();
+    requestAnimationFrame(() => {
+      this.render();
+    })
   }
 
   render() {
-    this.shadowRoot!.innerHTML = template;
+    this.shadowRoot!.innerHTML = this.template;
 
     if (typeof this.resolve === 'function') {
       this.resolve(true);
@@ -47,3 +57,5 @@ class CommonDropdownButton extends HTMLElement {
     }
   }
 }
+
+export default CommonDropdownButton;
