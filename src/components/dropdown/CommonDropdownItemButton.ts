@@ -29,7 +29,7 @@ class CommonDropdownItemButton extends HTMLElement {
 
             this.dropdownItemButton = this.shadowRoot!.querySelector('button');
             this.dropdownItemButton?.addEventListener('click', () => {
-                this.dispatchEvent(new CustomEvent('click:value', {
+                this.dispatchEvent(new CustomEvent('click:common-dropdown-item-button', {
                     bubbles: true, // 이벤트 버블링 허용
                     detail: {
                         data: this.data,

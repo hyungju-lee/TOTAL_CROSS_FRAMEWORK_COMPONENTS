@@ -96,7 +96,7 @@ class CommonDropdown extends HTMLElement implements CustomWebComponent {
         }
       });
 
-      this.addEventListener('click:value', event => {
+      this.addEventListener('click:common-dropdown-item-button', event => {
         if (isCustomEvent(event)) {
           console.log('list item button clicked', event.detail)
           this.dispatchEvent(new CustomEvent('click:value', {
