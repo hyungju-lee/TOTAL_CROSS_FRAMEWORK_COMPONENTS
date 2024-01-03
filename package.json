@@ -1,7 +1,7 @@
 {
   "name": "hyungju-lee-ui",
   "version": "0.0.2",
-  "main": "dist",
+  "main": "dist/hyungju-lee-ui.es.js",
   "files": [
     "dist"
   ],
