@@ -9,7 +9,7 @@ class CommonDropdownButton extends HTMLElement {
     'disabled',
   ];
 
-  resolve: () => void = () => {};
+  resolve: (value: unknown) => void = () => {};
 
   constructor() {
     super();
@@ -25,21 +25,21 @@ class CommonDropdownButton extends HTMLElement {
     this.shadowRoot!.innerHTML = template;
 
     if (typeof this.resolve === 'function') {
-      this.resolve();
+      this.resolve(true);
     }
   }
 
-  async attributeChangedCallback(name, oldValue, newValue) {
-    await new Promise((resolve, reject) => {
+  async attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
+    await new Promise((resolve) => {
       this.resolve = resolve;
     })
 
     switch (name) {
       case 'disabled':
         if (newValue === 'true') {
-          this.shadowRoot!.querySelector('button').setAttribute('disabled', 'true')
+          this.shadowRoot!.querySelector<HTMLElement>('button')!.setAttribute('disabled', 'true')
         } else {
-          this.shadowRoot!.querySelector('button').setAttribute('disabled', 'false')
+          this.shadowRoot!.querySelector<HTMLElement>('button')!.setAttribute('disabled', 'false')
         }
         break;
       default:
