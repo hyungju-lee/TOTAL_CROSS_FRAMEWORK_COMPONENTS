@@ -1,5 +1,3 @@
-import useVue3 from "./components/hook/useVue3.ts";
-
 import CommonBase from "./components/base/CommonBase.ts";
 
 import CommonDropdown from "./components/dropdown/CommonDropdown.ts";
@@ -9,8 +7,6 @@ import CommonDropdownButton from "./components/dropdown/CommonDropdownButton.ts"
 import CommonDropdownItem from "./components/dropdown/CommonDropdownItem.ts";
 
 export {
-    useVue3,
-
     CommonBase,
 
     CommonDropdown,
