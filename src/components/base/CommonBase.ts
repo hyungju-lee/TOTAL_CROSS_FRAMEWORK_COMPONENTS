@@ -1,7 +1,11 @@
 const template = `
-  <div class="common-base">
-    <slot></slot>
-  </div>
+  <span style="font-size: 30px">하이 오 연결되네?</span>
+  <ul class="common-base">
+    <li>왜안돼</li>
+    <li>
+      <slot></slot>
+    </li>
+  </ul>
 `;
 
 class CommonBase extends HTMLElement {
