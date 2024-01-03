@@ -5,13 +5,10 @@ class CommonBase extends HTMLElement {
   </div>
 `;
 
-  get style() {
-    return (this.shadowRoot!.host as HTMLElement).style;
-  }
+  static observedAttributes = [
+    'style',
+  ];
 
-  set style(value) {
-    Object.assign((this.shadowRoot!.host as HTMLElement), value);
-  }
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -23,8 +20,25 @@ class CommonBase extends HTMLElement {
     })
   }
 
+  attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
+    switch (name) {
+      case 'style':
+        this.applyStyles(newValue);
+        break
+      default:
+        break
+    }
+  }
+
   render() {
     this.shadowRoot!.innerHTML = this.template;
+  }
+
+  applyStyles(styles: string) {
+    const button = this.shadowRoot!.querySelector<HTMLElement>('.common-base');
+    if (button) {
+      button.style.cssText = styles;
+    }
   }
 }
 

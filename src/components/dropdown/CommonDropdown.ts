@@ -1,4 +1,6 @@
 import {isCustomEvent} from "../types/guards.ts";
+import CommonDropdownButton from "./CommonDropdownButton.ts";
+import CommonDropdownList from "./CommonDropdownList.ts";
 
 const template = `
   <div class="common-dropdown">
@@ -9,17 +11,13 @@ const template = `
 
 class CommonDropdown extends HTMLElement {
   isOpen!: boolean;
-  observer!: MutationObserver;
+  // observer!: MutationObserver;
   dropdownList: HTMLElement | null = null;
   dropdownButton: HTMLElement | null = null;
 
-  get style() {
-    return (this.shadowRoot!.host as HTMLElement).style;
-  }
-
-  set style(value) {
-    Object.assign((this.shadowRoot!.host as HTMLElement), value);
-  }
+  static observedAttributes = [
+    'style',
+  ];
 
   constructor() {
     super();
@@ -30,17 +28,17 @@ class CommonDropdown extends HTMLElement {
   init() {
     this.dropdownList = null;
     this.isOpen = false;
-    this.observer = new MutationObserver((mutations) => {
-      mutations.forEach(mutation => {
-        if (mutation.type === "childList") {
-          // 자식 노드가 추가되거나 제거됐습니다.
-          this.dropdownList = this.querySelector<HTMLElement>('common-dropdown-list')!;
-          this.updateDisplay();
-        } else if (mutation.type === "attributes") {
-          console.log(`${mutation.attributeName} 특성이 변경됐습니다.`);
-        }
-      })
-    })
+    // this.observer = new MutationObserver((mutations) => {
+    //   mutations.forEach(mutation => {
+    //     if (mutation.type === "childList") {
+    //       // 자식 노드가 추가되거나 제거됐습니다.
+    //       this.dropdownList = this.querySelector<HTMLElement>('common-dropdown-list')!;
+    //       this.updateDisplay();
+    //     } else if (mutation.type === "attributes") {
+    //       console.log(`${mutation.attributeName} 특성이 변경됐습니다.`);
+    //     }
+    //   })
+    // })
   }
 
   /**
@@ -49,19 +47,36 @@ class CommonDropdown extends HTMLElement {
   connectedCallback() {
     requestAnimationFrame(() => {
       this.render();
-      this.observer.observe(this, {
-        attributes: true,
-        childList: true,
-        subtree: true,
+      // this.observer.observe(this, {
+      //   attributes: true,
+      //   childList: true,
+      //   subtree: true,
+      // })
+
+      this.shadowRoot!.querySelector('slot[name="dropdownList"]')?.addEventListener('slotchange', event => {
+        const slot = event.target as HTMLSlotElement;
+        const assignedElements = slot.assignedElements();
+
+        console.log('assignedElements', assignedElements[0] instanceof CommonDropdownList)
+
+        this.dropdownList = assignedElements.find(el => el instanceof CommonDropdownList) as HTMLElement | null;
+
+        this.updateDisplay();
       })
 
-      this.dropdownButton = this.querySelector('common-dropdown-button');
+      this.shadowRoot!.querySelector('slot[name="dropdownButton"]')?.addEventListener('slotchange', (event) => {
+        const slot = event.target as HTMLSlotElement;
+        const assignedElements = slot.assignedElements();
+        this.dropdownButton = assignedElements.find(el => el instanceof CommonDropdownButton) as HTMLElement | null;
 
-      if (this.dropdownButton) {
-        this.dropdownButton.addEventListener('click', () => {
-          this.toggleDropdown();
-        })
-      }
+        console.log('this.dropdownButton', this.dropdownButton)
+
+        if (this.dropdownButton) {
+          this.dropdownButton.addEventListener('click', () => {
+            this.toggleDropdown();
+          });
+        }
+      });
 
       this.addEventListener('clicked-dropdown-item-button', event => {
         if (isCustomEvent(event)) {
@@ -74,7 +89,17 @@ class CommonDropdown extends HTMLElement {
   }
 
   disconnectedCallback() {
-    this.observer.disconnect();
+    // this.observer.disconnect();
+  }
+
+  attributeChangedCallbackattributeChangedCallback(name: string, _oldValue: string, newValue: string) {
+    switch (name) {
+      case 'style':
+        this.applyStyles(newValue);
+        break
+      default:
+        break;
+    }
   }
 
   /**
@@ -92,6 +117,13 @@ class CommonDropdown extends HTMLElement {
   updateDisplay() {
     if (this.dropdownList) {
       this.dropdownList.style.display = this.isOpen ? 'block' : 'none';
+    }
+  }
+
+  applyStyles(styles: string) {
+    const button = this.shadowRoot!.querySelector<HTMLElement>('.common-dropdown');
+    if (button) {
+      button.style.cssText = styles;
     }
   }
 }

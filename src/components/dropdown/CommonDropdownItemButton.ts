@@ -9,18 +9,24 @@ class CommonDropdownItemButton extends HTMLElement {
     dropdownItemButton: HTMLElement | null = null;
     resolve: (value: unknown) => void = () => {};
 
-    static observedAttributes = ['disabled'];
+    static observedAttributes = [
+        'disabled',
+        'style',
+    ];
 
     set itemData(data: {label: string; value: unknown}) {
         this.data = data;
     }
 
     get style() {
-        return (this.shadowRoot!.host as HTMLElement).style;
+        return super.style;
     }
 
     set style(value) {
-        Object.assign((this.shadowRoot!.host as HTMLElement), value);
+        const baseEl = this.shadowRoot!.querySelector<HTMLElement>('.common-dropdown-item-button');
+        if (baseEl) {
+            Object.assign(baseEl.style, value);
+        }
     }
 
     constructor() {
@@ -61,8 +67,18 @@ class CommonDropdownItemButton extends HTMLElement {
                     this.shadowRoot!.querySelector('button')?.setAttribute('disabled', 'false');
                 }
                 break;
+            case 'style':
+                this.applyStyles(newValue);
+                break
             default:
                 break;
+        }
+    }
+
+    applyStyles(styles: string) {
+        const button = this.shadowRoot!.querySelector<HTMLElement>('.common-dropdown-item-button');
+        if (button) {
+            button.style.cssText = styles;
         }
     }
 }

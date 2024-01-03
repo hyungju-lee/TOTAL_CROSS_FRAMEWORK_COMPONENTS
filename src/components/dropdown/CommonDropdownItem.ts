@@ -5,13 +5,9 @@ class CommonDropdownItem extends HTMLElement {
         </li>
     `;
 
-    get style() {
-        return (this.shadowRoot!.host as HTMLElement).style;
-    }
-
-    set style(value) {
-        Object.assign((this.shadowRoot!.host as HTMLElement), value);
-    }
+    static observedAttributes = [
+        'style',
+    ];
 
     constructor() {
         super();
@@ -22,6 +18,23 @@ class CommonDropdownItem extends HTMLElement {
         requestAnimationFrame(() => {
             this.shadowRoot!.innerHTML = this.template;
         })
+    }
+
+    attributeChangedCallback(name: string, _oldValue: string, newValue: string) {
+        switch (name) {
+            case 'style':
+                this.applyStyles(newValue);
+                break
+            default:
+                break;
+        }
+    }
+
+    applyStyles(styles: string) {
+        const button = this.shadowRoot!.querySelector<HTMLElement>('.common-dropdown-item');
+        if (button) {
+            button.style.cssText = styles;
+        }
     }
 }
 
