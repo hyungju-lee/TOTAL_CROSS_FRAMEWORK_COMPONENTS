@@ -93,9 +93,15 @@ class CommonDropdown extends HTMLElement {
         }
       });
 
-      this.addEventListener('clicked-dropdown-item-button', event => {
+      this.addEventListener('click:value', event => {
         if (isCustomEvent(event)) {
           console.log('list item button clicked', event.detail)
+          this.dispatchEvent(new CustomEvent('click:value', {
+            bubbles: true, // 이벤트 버블링 허용
+            detail: {
+              data: event.detail.data,
+            }
+          }))
         }
       })
 
